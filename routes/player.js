@@ -1,19 +1,19 @@
 const router = require('express').Router();
 const controllers = require('../controllers');
 
-// User login
-router.post('/login', controllers.user.login);
+// player login
+router.post('/login', controllers.player.index);
 
-// User Create
-router.post('/', controllers.user.create);
+// player Create
+router.post('/', controllers.player.create);
 
-// User get
-router.get('/:id', controllers.user.show);
+// player get
+router.get('/:id', controllers.player.show);
 
-// User Update
-router.put('/:id', controllers.user.update);
+// player Update
+router.put('/:id', controllers.player.update);
 
-// User Delete
-router.delete('/:id', controllers.user.destroy);
+// player Delete
+router.delete('/:id', controllers.player.destroy);
 
 module.exports = router;
