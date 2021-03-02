@@ -17,10 +17,9 @@ app.use(
 		saveUninitialized: false,
 	})
 );
-app.use('/api/v1/users', routes.users);
-app.use('/api/v1/cities', routes.cities);
-app.use('/api/v1/posts', routes.posts);
-app.use('/api/v1/comments', routes.comments);
+app.use('/api/v1/user', routes.user);
+app.use('/api/v1/player', routes.player);
+app.use('/api/v1/attack', routes.attack);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
