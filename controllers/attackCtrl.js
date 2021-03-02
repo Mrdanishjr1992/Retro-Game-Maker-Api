@@ -15,8 +15,7 @@ const show = (req, res) => {
 };
 
 const create = (req, res) => {
-	const attackObj = {};
-	db.Attack.create(attackObj, (err, newAttack) => {
+	db.Attack.create(req.body, (err, newAttack) => {
 		if (err) return console.log(err);
 		return res.json(newAttack);
 	});

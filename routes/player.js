@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const controllers = require('../controllers');
 
-// player login
-router.post('/login', controllers.player.index);
+// player index
+router.get('/', controllers.player.index);
 
 // player Create
 router.post('/', controllers.player.create);

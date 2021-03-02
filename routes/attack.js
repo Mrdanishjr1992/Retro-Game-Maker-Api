@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const controllers = require('../controllers');
 
-// attack login
-router.post('/login', controllers.attack.index);
+// attack index
+router.get('/', controllers.attack.index);
 
 // attack Create
 router.post('/', controllers.attack.create);
