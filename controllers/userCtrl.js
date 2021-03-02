@@ -8,7 +8,6 @@ const login = (req, res) => {
 		if (!foundUser) {
 			return res.json('No user found');
 		}
-		// Verify the submitted email and password match
 		if (foundUser.password === req.body.password) {
 			return res.json(foundUser.username);
 		}
@@ -16,29 +15,26 @@ const login = (req, res) => {
 };
 
 const show = (req, res) => {
-	// Get user from DB by ID
-	db.User.findById(req.params.id, (err, foundPost) => {
+	db.User.findById(req.params.id, (err, foundUser) => {
 		if (err) return console.log(err);
-		// Send back data to client as JSON object
-		return res.json(foundPost);
+		return res.json(foundUser);
 	});
 };
 
 const create = (req, res) => {
 	console.log(req.body);
-	const user = {
+	const userObj = {
 		username: req.body.username,
 		password: req.body.password,
 	};
-	// Query DB to create a new user
-	db.User.create(user, (err, userCreated) => {
+	db.User.create(userObj, (err, createdUser) => {
 		if (err) {
 			return console.log(err);
 		}
-		if (!userCreated) {
+		if (!createdUser) {
 			return res.json('None created');
 		}
-		return res.json(userCreated);
+		return res.json(createdUser);
 	});
 };
 
@@ -47,17 +43,17 @@ const update = (req, res) => {
 		req.params.id,
 		req.body,
 		{ new: true },
-		(err, updatedPost) => {
+		(err, updatedUser) => {
 			if (err) return console.log(err);
-			return res.json(updatedPost);
+			return res.json(updatedUser);
 		}
 	);
 };
 
 const destroy = (req, res) => {
-	db.User.findByIdAndDelete(req.params.id, (err, deletedPost) => {
+	db.User.findByIdAndDelete(req.params.id, (err, deletedUser) => {
 		if (err) return console.log(err);
-		return res.json(deletedPost);
+		return res.json(deletedUser);
 	});
 };
 
