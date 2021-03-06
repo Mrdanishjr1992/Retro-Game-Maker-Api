@@ -1,19 +1,22 @@
 const router = require('express').Router();
 const controllers = require('../controllers');
-
-// User login
-router.post('/login', controllers.user.login);
+const auth = require('../middleware/auth');
 
 // User Create
 router.post('/', controllers.user.create);
 
+// User login
+router.post('/login', controllers.user.login);
+
 // User get
-router.get('/:id', controllers.user.show);
+router.get('/profile', controllers.user.show);
 
 // User Update
-router.put('/:id', controllers.user.update);
+router.put('/update', controllers.user.update);
 
 // User Delete
-router.delete('/:id', controllers.user.destroy);
+router.delete('/delete', controllers.user.destroy);
 
+// User Verify
+router.post('/verify', auth, controllers.user.verify);
 module.exports = router;

@@ -17,4 +17,5 @@ module.exports = {
 	Attack: require('./Attack'),
 	Player: require('./Player'),
 	User: require('./User'),
+	Map: require('./Map'),
 };

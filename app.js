@@ -1,24 +1,27 @@
 require('dotenv').config();
-require('./models');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const port = process.env.PORT || 4000;
 const app = express();
+const PORT = process.env.PORT || 4000;
 const routes = require('./routes');
-const session = require('express-session');
-app.use(cors());
-app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(
-	session({
-		secret: process.env.SECRET_STRING,
-		resave: false,
-		saveUninitialized: false,
-	})
-);
-app.use('/user', routes.user);
-app.use('/player', routes.player);
-app.use('/attack', routes.attack);
 
-app.listen(port, () => console.log('connected to port ' + port));
+// Middleware
+app.use(bodyParser.json());
+// Cross Origin Resource Sharing
+app.use(cors());
+
+// Home Route
+app.get('/', (req, res) => {
+	res.send('<h1>Retro-Game-Maker</h1>');
+});
+// User API Routes
+app.use('/user', routes.user);
+// Player API Routes
+app.use('/player', routes.player);
+// Attack API Routes
+app.use('/attack', routes.attack);
+// Map API Routes
+app.use('/map', routes.map);
+
+app.listen(PORT, () => console.log('connected to port ' + PORT));

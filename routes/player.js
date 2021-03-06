@@ -2,7 +2,7 @@ const router = require('express').Router();
 const controllers = require('../controllers');
 
 // player index
-router.get('/', controllers.player.index);
+router.get('/load/:id', controllers.player.index);
 
 // player Create
 router.post('/', controllers.player.create);

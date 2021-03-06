@@ -1,6 +1,6 @@
-# Dev-At-Station-Api
+# Dev-A-Station-Api
 
-Server-side and Database application for Dev-At-Station game.
+Server-side and Database application for Dev-A-Station game.
 
 ## Dependencies
 

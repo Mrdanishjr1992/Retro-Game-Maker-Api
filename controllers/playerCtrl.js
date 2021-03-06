@@ -1,7 +1,7 @@
 const db = require('../models');
 
 const index = (req, res) => {
-	db.Player.find({}, (err, allPlayers) => {
+	db.Player.find({ userId: req.params.id }, (err, allPlayers) => {
 		if (err) return console.log(err);
 		// Send back data as JSON object
 		return res.json(allPlayers);

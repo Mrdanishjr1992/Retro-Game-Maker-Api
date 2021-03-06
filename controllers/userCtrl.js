@@ -1,66 +1,136 @@
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const db = require('../models');
 
-const login = (req, res) => {
-	db.User.findOne({ username: req.body.username }, (err, foundUser) => {
-		if (err) {
-			console.log(err);
-		}
-		if (!foundUser) {
-			return res.json('No user found');
-		}
-		if (foundUser.password === req.body.password) {
-			return res.json(foundUser.username);
-		}
-	});
-};
+async function create(req, res) {
+	const { username, password } = req.body;
 
-const show = (req, res) => {
-	db.User.findById(req.params.id, (err, foundUser) => {
-		if (err) return console.log(err);
-		return res.json(foundUser);
-	});
-};
+	if (!username || !password) {
+		return res.json({ status: 400, message: 'All Fields Are Required' });
+	}
+	// Asyc/Await Version
+	try {
+		const foundUser = await db.User.findOne({ username });
 
-const create = (req, res) => {
-	console.log(req.body);
-	const userObj = {
-		username: req.body.username,
-		password: req.body.password,
-	};
-	db.User.create(userObj, (err, createdUser) => {
-		if (err) {
-			return console.log(err);
+		if (foundUser) {
+			console.log('User account already exists: ', foundUser);
+			return res.json({
+				status: 400,
+				error: 'User already exists. Please login',
+			});
 		}
-		if (!createdUser) {
-			return res.json('None created');
-		}
-		return res.json(createdUser);
-	});
-};
 
+		// Create Salt for password hash
+		const salt = await bcrypt.genSalt(10);
+
+		// Hash user plain text password
+		const hash = await bcrypt.hash(password, salt);
+
+		const newUser = await db.User.create({ username, password: hash });
+
+		// Respond back to client
+		res.json(newUser);
+	} catch (err) {
+		return res.json({
+			status: 500,
+			error: 'Something went wrong. Please try again',
+		});
+	}
+}
+
+async function show(req, res) {
+	try {
+		// currentUserId = req.currentUserId
+		// Findy User by ID
+		const user = await db.User.findById(req.currentUserId);
+		return res.json({ status: 200, profile: user });
+	} catch (err) {
+		console.log(err);
+		return res
+			.status(500)
+			.json({ status: 500, error: 'Something went wrong. Please try again' });
+	}
+}
+
+async function login(req, res) {
+	const { username, password } = req.body;
+	// Return error if no form data
+	if (!username || !password) {
+		return res
+			.status(400)
+			.json({ status: 400, error: 'All fields are required' });
+	}
+
+	try {
+		// Find user by email
+		const user = await db.User.findOne({ username });
+		// console.log(user);
+		if (!user) {
+			res
+				.status(400)
+				.json({ status: 400, error: 'Invalid credentials. Please try again' });
+		}
+
+		// Verify supplied password matches found user password
+		const isMatch = await bcrypt.compare(password, user.password);
+		if (!isMatch) {
+			console.log('Login passwords do not match');
+			return res
+				.status(400)
+				.json({ status: 400, error: 'Invalid credentials. Please try again' });
+		}
+
+		// Create a jwt with userId
+		const payload = { userId: user._id };
+		const secret = process.env.JWT_SECRET;
+		console.log(secret);
+		const expiration = { expiresIn: '2d' };
+
+		// Sign the jwt
+		const token = await jwt.sign(payload, secret, expiration);
+
+		res.json({ status: 200, token });
+	} catch (err) {
+		console.log(err);
+		return res
+			.status(500)
+			.json({ status: 500, error: 'Something went wrong. Please try again' });
+	}
+
+	console.log(user);
+}
 const update = (req, res) => {
-	db.User.findByIdAndUpdate(
-		req.params.id,
-		req.body,
-		{ new: true },
-		(err, updatedUser) => {
-			if (err) return console.log(err);
-			return res.json(updatedUser);
-		}
-	);
+	try {
+		db.User.findByIdAndUpdate(
+			req.currentUserId,
+			req.body,
+			{ new: true },
+			(err, updatedUser) => {
+				return res.json({ status: 200, profile: updatedUser });
+			}
+		);
+	} catch (err) {
+		console.log(err);
+		return res
+			.status(500)
+			.json({ status: 500, error: 'Something went wrong. Please try again' });
+	}
 };
 
 const destroy = (req, res) => {
-	db.User.findByIdAndDelete(req.params.id, (err, deletedUser) => {
-		if (err) return console.log(err);
-		return res.json(deletedUser);
+	db.User.findByIdAndDelete(req.currentUserId, (err, deletedUser) => {
+		return res.json({ status: 200, profile: deletedUser });
 	});
 };
 
+async function verify(req, res) {
+	res.json({ status: 200, userId: req.currentUserId });
+}
 module.exports = {
-	login,
-	show,
 	create,
+	show,
+	login,
+	verify,
 	update,
 	destroy,
 };
