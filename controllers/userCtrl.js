@@ -96,8 +96,6 @@ async function login(req, res) {
 			.status(500)
 			.json({ status: 500, error: 'Something went wrong. Please try again' });
 	}
-
-	console.log(user);
 }
 const update = (req, res) => {
 	try {

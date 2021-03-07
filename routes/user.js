@@ -9,7 +9,7 @@ router.post('/', controllers.user.create);
 router.post('/login', controllers.user.login);
 
 // User get
-router.get('/profile', controllers.user.show);
+router.post('/profile', auth, controllers.user.show);
 
 // User Update
 router.put('/update', controllers.user.update);
@@ -19,4 +19,5 @@ router.delete('/delete', controllers.user.destroy);
 
 // User Verify
 router.post('/verify', auth, controllers.user.verify);
+
 module.exports = router;
