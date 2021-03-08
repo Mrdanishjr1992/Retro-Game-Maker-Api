@@ -29,6 +29,7 @@ const mapSchema = new mongoose.Schema(
 			width: Number,
 			height: Number,
 		},
+		playerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 	},
 	{ timestamps: true }
 );

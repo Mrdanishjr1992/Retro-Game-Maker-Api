@@ -1,7 +1,7 @@
 const db = require('../models');
 
 const index = (req, res) => {
-	db.Map.find({}, (err, allMaps) => {
+	db.Map.find({ playerId: req.params.id }, (err, allMaps) => {
 		if (err) return console.log(err);
 		return res.json(allMaps);
 	});
