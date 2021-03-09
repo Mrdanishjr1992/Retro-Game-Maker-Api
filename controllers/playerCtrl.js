@@ -19,7 +19,18 @@ const show = (req, res) => {
 const create = (req, res) => {
 	db.Player.create(req.body, (err, newPlayer) => {
 		if (err) return console.log(err);
-		return res.json(newPlayer);
+		db.User.findByIdAndUpdate(
+			req.body.userId,
+			{
+				$push: { players: [newPlayer._id] },
+			},
+			{ new: true },
+			(err, updatedUser) => {
+				if (err) return console.log(err);
+				console.log(updatedUser);
+				return res.json(newPlayer);
+			}
+		);
 	});
 };
 
