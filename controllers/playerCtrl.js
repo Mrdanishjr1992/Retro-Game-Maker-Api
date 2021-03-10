@@ -2,7 +2,7 @@ const db = require('../models');
 
 const index = (req, res) => {
 	db.Player.find({ userId: req.params.userId }, (err, allPlayers) => {
-		if (err) return console.log(err);
+		if (err) return err;
 		// Send back data as JSON object
 		return res.json(allPlayers);
 	});
@@ -10,7 +10,7 @@ const index = (req, res) => {
 
 const show = (req, res) => {
 	db.Player.findById(req.params.id, (err, foundPlayer) => {
-		if (err) return console.log(err);
+		if (err) return err;
 		// Send back data to client as JSON object
 		return res.json(foundPlayer);
 	});
@@ -18,7 +18,7 @@ const show = (req, res) => {
 
 const create = (req, res) => {
 	db.Player.create(req.body, (err, newPlayer) => {
-		if (err) return console.log(err);
+		if (err) return err;
 		db.User.findByIdAndUpdate(
 			req.body.userId,
 			{
@@ -26,8 +26,7 @@ const create = (req, res) => {
 			},
 			{ new: true },
 			(err, updatedUser) => {
-				if (err) return console.log(err);
-				console.log(updatedUser);
+				if (err) return err;
 				return res.json(newPlayer);
 			}
 		);
@@ -40,7 +39,7 @@ const update = (req, res) => {
 		req.body,
 		{ new: true },
 		(err, updatedPlayer) => {
-			if (err) return console.log(err);
+			if (err) return err;
 			return res.json(updatedPlayer);
 		}
 	);
@@ -48,7 +47,7 @@ const update = (req, res) => {
 
 const destroy = (req, res) => {
 	db.Player.findByIdAndDelete(req.params.id, (err, deletedPlayer) => {
-		if (err) return console.log(err);
+		if (err) return err;
 		return res.json(deletedPlayer);
 	});
 };

@@ -13,7 +13,6 @@ async function create(req, res) {
 		const foundUser = await db.User.findOne({ username });
 
 		if (foundUser) {
-			console.log('User account already exists: ', foundUser);
 			return res.json({
 				status: 400,
 				error: 'User already exists. Please login',
@@ -45,7 +44,6 @@ async function show(req, res) {
 		const user = await db.User.findById(req.currentUserId);
 		return res.json({ status: 200, profile: user });
 	} catch (err) {
-		console.log(err);
 		return res
 			.status(500)
 			.json({ status: 500, error: 'Something went wrong. Please try again' });
@@ -64,7 +62,6 @@ async function login(req, res) {
 	try {
 		// Find user by email
 		const user = await db.User.findOne({ username });
-		// console.log(user);
 		if (!user) {
 			res
 				.status(400)
@@ -74,7 +71,6 @@ async function login(req, res) {
 		// Verify supplied password matches found user password
 		const isMatch = await bcrypt.compare(password, user.password);
 		if (!isMatch) {
-			console.log('Login passwords do not match');
 			return res
 				.status(400)
 				.json({ status: 400, error: 'Invalid credentials. Please try again' });
@@ -83,7 +79,6 @@ async function login(req, res) {
 		// Create a jwt with userId
 		const payload = { userId: user._id };
 		const secret = process.env.JWT_SECRET;
-		console.log(secret);
 		const expiration = { expiresIn: '2d' };
 
 		// Sign the jwt
@@ -91,7 +86,6 @@ async function login(req, res) {
 
 		res.json({ status: 200, token });
 	} catch (err) {
-		console.log(err);
 		return res
 			.status(500)
 			.json({ status: 500, error: 'Something went wrong. Please try again' });
@@ -108,7 +102,6 @@ const update = (req, res) => {
 			}
 		);
 	} catch (err) {
-		console.log(err);
 		return res
 			.status(500)
 			.json({ status: 500, error: 'Something went wrong. Please try again' });
