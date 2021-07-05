@@ -13,7 +13,7 @@ app.use(cors());
 
 // Home Route
 app.get('/', (req, res) => {
-	res.send('<h1>Retro-Game-Maker-Api</h1>');
+  res.send('<h2>Retro-Game-Maker-Api</h2>');
 });
 // User API Routes
 app.use('/user', routes.user);
