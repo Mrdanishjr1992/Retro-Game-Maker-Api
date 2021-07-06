@@ -7,13 +7,14 @@ const PORT = process.env.PORT || 4000;
 const routes = require('./routes');
 
 // Middleware
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 // Cross Origin Resource Sharing
-var corsOptions = {
-  origin: '*',
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-};
-app.use(cors(corsOptions));
+// var corsOptions = {
+//   origin: '*',
+//   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+// };
+app.use(cors());
 
 // Home Route
 app.get('/', (req, res) => {
