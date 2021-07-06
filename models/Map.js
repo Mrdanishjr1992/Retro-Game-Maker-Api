@@ -12,7 +12,7 @@ const mapSchema = new mongoose.Schema(
             x: Number,
             y: Number,
           },
-          walkable: true,
+          walkable: { type: Boolean, default: true },
         },
       ],
     ],
